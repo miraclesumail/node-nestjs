@@ -3,6 +3,12 @@ import { CustomerService } from './customer.service';
 import { CreateCustomerDTO } from './dto/create-customer.dto';
 import { CreateLotteryDTO } from './dto/create-lottery.dto';
 
+// const getAsync = promisify(client.get).bind(client);
+// const setAsync = promisify(client.set).bind(client);
+// const setex = promisify(client.setex).bind(client);
+// const ttl = promisify(client.ttl).bind(client);
+// const incr = promisify(client.incr).bind(client);
+  
 class Test {
     readonly email: string;
     readonly phone: string; 
@@ -19,6 +25,22 @@ export class CustomerController {
         const customers = await this.customerService.getAllCustomer();
         return res.status(HttpStatus.OK).json(customers);
     }
+
+    // @Get('testRedis')
+    // async testRedis(@Res() res) {
+    //     //   let msg = await getAsync('count');
+    //     //   let time = await ttl('count');
+    //     //   if(msg == 40 && time >= 0 ) {
+    //     //       return res.status(HttpStatus.OK).json({msg: '超过次数限制'});
+    //     //   } else {    
+    //     //       msg && time ? await incr('count') : await setex('count', 20, 1);
+    //     //       return res.status(HttpStatus.OK).json({msg: +await getAsync('count'), time: await ttl('count')});
+    //     //   }
+    //     client.setAsync('ww', 'axixii');
+    //     client.setexAsync('www', 10, 'axi');
+    //     //client.setAsync('ww', 'axixii');
+    //     return res.status(HttpStatus.OK).json({msg: await client.getAsync('foo')});
+    // }
 
     @Get('times')
     async getAllTimes(@Res() res) {
