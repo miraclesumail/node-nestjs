@@ -34,7 +34,7 @@ const Pp = mongoose.model('Pp', personqSchema);
   
   persons.name = 'Not Val';
   console.log(persons); // { n: 'Not Val' }
-  console.log('-----aaaa-----');
+  console.log('-----aaaafff-----');
 
 // disabled _id
 // var childSchema = new Schema({ name: String }, { _id: false });
