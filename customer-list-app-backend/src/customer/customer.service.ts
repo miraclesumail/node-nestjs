@@ -8,6 +8,7 @@ import { Lottery } from './interfaces/lottery.interface';
 import { CreateCustomerDTO } from './dto/create-customer.dto';
 import { CreateLotteryDTO } from './dto/create-lottery.dto';
 import { TestService } from './test.service'
+const TokenGenerator = require('uuid-token-generator');
 
 @Injectable()
 export class CustomerService {
@@ -32,9 +33,6 @@ export class CustomerService {
         // })
 
         // customer.save((err) => {})
-        this.customerModel.findOne({email: 'eeee@.com'}).populate('movies').exec((err, customer) => {
-             console.log(customer);
-        })
      }
 
     addNumber() {
@@ -53,6 +51,35 @@ export class CustomerService {
     }
 
     async getAllMovie(): Promise<Movie[]> {
+        const movie = await this.movieModel({
+              name: 'erwrwr',
+              director: 'wrwrwr',
+              actor: 'werwerwr'
+        })  
+        const mm = await movie.save();
+        console.log(mm);
+
+        // const tokgen = new TokenGenerator(); // Default is a 128-bit token encoded in base58
+        // const name = tokgen.generate();
+        // const customer = await this.customerModel({
+        //         first_name: name,
+        //         last_name: '124rewr',
+        //         email: 'gregeg',
+        //         phone: '2453525',
+        //         movies: [mm._id]
+        // })
+        // await customer.save();
+
+        const customer = await this.customerModel.findOne({email: 'gregeg'}).exec();
+        console.log(customer);
+        customer.movies.push(mm._id);
+
+        await customer.save();
+
+        this.customerModel.findOne({email: 'gregeg'}).populate('movies').exec((err, customer) => {
+            console.log(customer.movies);
+        })
+      
         const movies = await this.movieModel.find().exec();
         return movies;
     }

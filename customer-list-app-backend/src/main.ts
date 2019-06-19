@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 var schedule = require('node-schedule');
 
+
+
 /**
  *  3s执行一次
  *  cancelNext 取消下一次执行
@@ -9,13 +11,13 @@ var schedule = require('node-schedule');
 
 let count = 0;
 
-var j = schedule.scheduleJob('*/3 * * * * *', function(fireDate){
-    count++;
-    if(count > 0 && !(count%3))
-        j.cancelNext();
-    console.log('This job was supposed to run at ' + fireDate + ', but actually ran at ' + new Date());
-    console.log(j.nextInvocation());
-});
+// var j = schedule.scheduleJob('*/3 * * * * *', function(fireDate){
+//     count++;
+//     if(count > 0 && !(count%3))
+//         j.cancelNext();
+//     console.log('This job was supposed to run at ' + fireDate + ', but actually ran at ' + new Date());
+//     console.log(j.nextInvocation());
+// });
 
 const WebSocket = require('ws');
 

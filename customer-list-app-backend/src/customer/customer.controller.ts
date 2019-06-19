@@ -1,7 +1,8 @@
-import { Controller, Get, Res, HttpStatus, Post, Body, Put, Query, NotFoundException, Delete, Param, HttpCode } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Post, Body, Put, Query, NotFoundException, Delete, Param, HttpCode, UseInterceptors } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDTO } from './dto/create-customer.dto';
 import { CreateLotteryDTO } from './dto/create-lottery.dto';
+import { LoginInterceptor } from '../interceptors/time.interceptor'
 
 // const getAsync = promisify(client.get).bind(client);
 // const setAsync = promisify(client.set).bind(client);
@@ -14,11 +15,13 @@ class Test {
     readonly phone: string; 
 }
 
+//@UseInterceptors(LoginInterceptor)
 @Controller('customer')
 export class CustomerController {
     constructor(private customerService: CustomerService) { }
 
     // Retrieve customers list
+    @UseInterceptors(LoginInterceptor)
     @Get('customers')
     async getAllCustomer(@Res() res) {
         this.customerService.addNumber();
@@ -52,7 +55,6 @@ export class CustomerController {
     @HttpCode(204)
     async getAllMovie(@Res() res) {
         const movies = await this.customerService.getAllMovie();
-
         return res.status(HttpStatus.OK).json({qq:'sss', data:'sss', array: this.customerService.numbers});
        // return res.status(HttpStatus.OK).json(movies);
     }

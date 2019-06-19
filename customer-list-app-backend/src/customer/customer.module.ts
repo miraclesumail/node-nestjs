@@ -39,7 +39,7 @@ export class CustomerModule implements NestModule{
     }
  }
 
-async function logger(req, res, next) {
+async function logger(req, res) {
     console.log('开始杀死后四十杀死或撕毁Request...');
     let msg = await client.getAsync('count');
     let time = await client.ttlAsync('count');
@@ -48,14 +48,18 @@ async function logger(req, res, next) {
     } else {    
         msg ? await client.incrAsync('count') : await client.setexAsync('count', 20, 1);
         // return res.status(HttpStatus.OK).json({msg: +await getAsync('count'), time: await ttl('count')});
-    }
-    next();
+    }  
 }
 
 @Injectable()
 class LoggerMiddleware implements NestMiddleware{
-  resolve() {
-    return Promise.resolve(logger);
+ 
+  use(req: Request, res: Response, next: Function) {
+     logger(req, res);
+     next();
   }
+  // resolve() {
+  //   return Promise.resolve(logger);
+  // }
 }
 
