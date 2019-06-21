@@ -9,6 +9,7 @@ export class LoginInterceptor implements NestInterceptor {
        constructor(private userService:UserService){}
 
        async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
+            
             console.log(context.getArgByIndex(0).res);
  
             console.log(context.getArgByIndex(0).query);
@@ -34,5 +35,24 @@ export class LoginInterceptor implements NestInterceptor {
               .pipe(
                 tap(() => console.log(`After... ${Date.now() - now}ms`)),
             );
+       }
+}
+
+@Injectable()
+export class LogInterceptor implements NestInterceptor {
+       constructor(private userService:UserService){}
+
+       async intercept(context: ExecutionContext, next: CallHandler): Promise<any> {
+            console.log(context.getArgByIndex(0).body);
+            const body = context.getArgByIndex(0).body;
+            const userStatus = await this.userService.getNumUserStatus(body.user_name, 3);
+
+            if(userStatus.filter(item => !item.status).length == 3 ) {
+                context.getArgByIndex(0).res.status(200).json({msg: '3次输入有误 被锁了'});
+                return
+            }
+               
+            return next
+              .handle()
        }
 }

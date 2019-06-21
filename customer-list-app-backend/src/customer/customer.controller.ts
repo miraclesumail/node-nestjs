@@ -4,6 +4,8 @@ import { CreateCustomerDTO } from './dto/create-customer.dto';
 import { CreateLotteryDTO } from './dto/create-lottery.dto';
 import { LoginInterceptor } from '../interceptors/time.interceptor'
 
+const nodemailer = require('nodemailer');
+
 // const getAsync = promisify(client.get).bind(client);
 // const setAsync = promisify(client.set).bind(client);
 // const setex = promisify(client.setex).bind(client);
@@ -54,6 +56,32 @@ export class CustomerController {
     @Get('movies')
     @HttpCode(204)
     async getAllMovie(@Res() res) {
+        // 开启一个SMTP连接
+        let transporter = nodemailer.createTransport({
+            // host: 'smtp.qq.com',
+            service: 'qq', // 需要到qq邮箱设置开通SMTP, 查看支持的邮件服务商列表 https://nodemailer.com/smtp/well-known/
+            port: 465, // SMTP 端口
+            secureConnection: true, // 使用了SSL
+            secure: true, // true for 465, false for other ports
+            auth: {
+                user: '857247710@qq.com',
+                pass: 'vupdxtauyvzibcgf' // 这里密码不是qq密码，是你设置的smtp授权码
+            }
+        })
+
+        // 填写邮件信息
+        let mailOptions = {
+            from: '"Fred Foo 👻" <857247710@qq.com>', // 发件人
+            to: 'toby.zhao@kingbaly.me', // 收件人
+            subject: '你是少时诵诗书所', // 标题
+            // 发送text或者html格式
+            text: '你是sdsd么么么么', // plain text body 文本格式的内容
+            html: '' // html body HTML格式的内容
+        };
+
+        let info = await transporter.sendMail(mailOptions);
+        console.log(info);
+
         const movies = await this.customerService.getAllMovie();
         return res.status(HttpStatus.OK).json({qq:'sss', data:'sss', array: this.customerService.numbers});
        // return res.status(HttpStatus.OK).json(movies);

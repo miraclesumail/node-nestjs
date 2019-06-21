@@ -39,7 +39,8 @@ export class UserService {
 
     // Get a single customer
     async getUser(userName): Promise<User> {
-        const user = await this.userModel.find({user_name: userName}).exec();
+        const user = await this.userModel.findOne({user_name: userName}).exec();
+        console.log(user);
         return Promise.resolve(user);
     }
 
@@ -63,4 +64,13 @@ export class UserService {
 
          return Promise.resolve(userStatus);
      }
+
+     async getNumUserStatus(userName, number): Promise<UserStatus[]> {
+        const userStatus = await this.userStatusModel.find({
+            user_name: userName,
+            action: 'login' 
+        }).limit(number).sort({ time: -1 }).exec();
+
+        return Promise.resolve(userStatus);
+    }
 }

@@ -59,17 +59,6 @@ export class CustomerService {
         const mm = await movie.save();
         console.log(mm);
 
-        // const tokgen = new TokenGenerator(); // Default is a 128-bit token encoded in base58
-        // const name = tokgen.generate();
-        // const customer = await this.customerModel({
-        //         first_name: name,
-        //         last_name: '124rewr',
-        //         email: 'gregeg',
-        //         phone: '2453525',
-        //         movies: [mm._id]
-        // })
-        // await customer.save();
-
         const customer = await this.customerModel.findOne({email: 'gregeg'}).exec();
         console.log(customer);
         customer.movies.push(mm._id);
