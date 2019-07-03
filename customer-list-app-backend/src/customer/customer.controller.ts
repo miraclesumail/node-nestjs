@@ -1,8 +1,11 @@
-import { Controller, Get, Res, HttpStatus, Post, Body, Put, Query, NotFoundException, Delete, Param, HttpCode, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, Post, Body, Put, Query, NotFoundException, Delete, Param, HttpCode, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
+import { FileInterceptor, FileFieldsInterceptor, FilesInterceptor } from '@nestjs/platform-express'
+import { diskStorage } from  'multer';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDTO } from './dto/create-customer.dto';
 import { CreateLotteryDTO } from './dto/create-lottery.dto';
 import { LoginInterceptor } from '../interceptors/time.interceptor'
+import { extname } from  'path';
 
 const nodemailer = require('nodemailer');
 
@@ -51,6 +54,26 @@ export class CustomerController {
     async getAllTimes(@Res() res) {
         const times = await this.customerService.getAllTime();
         return res.status(HttpStatus.OK).json(times);
+    }
+
+    // @Get('avatars/:fileId')
+    //     async serveAvatar(@Param('fileId') fileId, @Res() res): Promise<any> {
+    //     // res.sendFile(fileId, { root: 'avatars'});
+    //     res.sendFile(fileId, { root: 'avatars'});
+    // }
+
+    @Post('upload')
+    @UseInterceptors(FilesInterceptor('file', 5,  {
+        storage: diskStorage({
+          destination: './avatars', 
+          filename: (req, file, cb) => {
+          const randomName = Array(12).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+          return cb(null, `${randomName}${extname(file.originalname)}`)
+        }
+        })
+      }))
+    uploadFile(@UploadedFiles() file) {
+         console.log(file);
     }
 
     @Get('movies')
